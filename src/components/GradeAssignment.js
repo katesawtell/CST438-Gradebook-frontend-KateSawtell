@@ -78,6 +78,9 @@ function GradeAssignment ( ) {
     return (
       <div>
         <h3>Assignment Grades</h3>
+        <button>
+        <Link to={`/ListAssignment/`} >Home Page</Link>
+        </button>
         <div margin="auto" >
           <h4 id="gmessage" >{message}&nbsp;</h4>
           <table className="Center"> 
@@ -103,6 +106,7 @@ function GradeAssignment ( ) {
               ))}
             </tbody>
           </table>
+          <br></br>
           <button id="sgrade" type="button" margin="auto" onClick={saveGrades}>Save Grades</button>
         </div>
       </div>

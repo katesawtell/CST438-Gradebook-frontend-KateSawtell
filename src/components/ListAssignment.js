@@ -25,12 +25,15 @@ function ListAssignment(props) {
   }
   
   
-    const headers = ['Assignment Name', 'Course Title', 'Due Date', ' ', ' ', ' '];
+    const headers = ['Assignment Name', 'Course Title', 'Due Date', 'Grade', 'Edit'];
     
     return (
       <div>
         <h3>Assignments</h3>
         <div margin="auto" >
+        <Link to={`/addassignment/`} >
+          <button>Add New Assignment</button>
+        </Link>
           <h4>{message}&nbsp;</h4>
               <table className="Center"> 
                 <thead>
@@ -45,17 +48,15 @@ function ListAssignment(props) {
                       <td>{row.courseTitle}</td>
                       <td>{row.dueDate}</td>
                       <td>
-                        <Link to={`/gradeAssignment/${assignments[idx].id}`} >Grade</Link>
+                      <Link to={`/gradeAssignment/${assignments[idx].id}`} >Grade</Link>
                       </td>
-                      <td>Edit</td>
-                      <td>Delete</td>
+                      <td><Link to={`/editAssignment/${assignments[idx].id}`} >Edit/Delete</Link></td>
                     </tr>
                   ))}
                 </tbody>
               </table>
           </div>
-      </div>
+        </div>
     )
-}  
-
+} 
 export default ListAssignment;
