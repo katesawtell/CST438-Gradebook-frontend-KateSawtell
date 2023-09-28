@@ -16,7 +16,7 @@ function AddAssignment(props) {
       try {
         fetch(`${SERVER_URL}/assignment` ,
         {
-        method: 'PUT',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json', },
         body: JSON.stringify(assignment)
         } )
@@ -51,7 +51,7 @@ function AddAssignment(props) {
     <div>
       <h3>Add New Assignment</h3>
       <button>
-      <Link to={`/ListAssignment/`} >Home Page</Link>
+      <Link to={`/`} >Home Page</Link>
       </button>
     <form onSubmit={handleSubmit}>
       <div>

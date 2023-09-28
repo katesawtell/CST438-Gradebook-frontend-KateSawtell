@@ -1,5 +1,6 @@
 import React, {useState, useEffect}  from 'react';
 import {SERVER_URL} from '../constants';
+import {Link} from 'react-router-dom';
 
 
 //  required properties -  assignmentId
@@ -79,7 +80,7 @@ function GradeAssignment ( ) {
       <div>
         <h3>Assignment Grades</h3>
         <button>
-        <Link to={`/ListAssignment/`} >Home Page</Link>
+        <Link to={`/`} >Home Page</Link>
         </button>
         <div margin="auto" >
           <h4 id="gmessage" >{message}&nbsp;</h4>
@@ -106,7 +107,6 @@ function GradeAssignment ( ) {
               ))}
             </tbody>
           </table>
-          <br></br>
           <button id="sgrade" type="button" margin="auto" onClick={saveGrades}>Save Grades</button>
         </div>
       </div>

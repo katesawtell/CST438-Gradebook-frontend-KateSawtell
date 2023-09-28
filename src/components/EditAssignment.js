@@ -86,7 +86,7 @@ function EditAssignment(props) {
     <div>
       <h3>Edit Assignment</h3>
       <button>
-      <Link to={`/ListAssignment/`} >Home Page</Link>
+      <Link to={`/`} >Home Page</Link>
       </button>
       <div margin="auto">
         <h4 id="gmessage">{message}&nbsp;</h4>
