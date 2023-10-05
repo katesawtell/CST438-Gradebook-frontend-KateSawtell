@@ -1,8 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {SERVER_URL} from '../constants';
 import {Link} from 'react-router-dom';
+import EditAssignment from './EditAssignment';
+import AddAssignment from './AddAssignment';
 
-
+// NOTE:  for OAuth security, http request must have
+//   credentials: 'include' 
+//
 function ListAssignment(props) {
 
   const [assignments, setAssignments] = useState([]);
@@ -24,16 +28,32 @@ function ListAssignment(props) {
     .catch(err => console.error(err)); 
   }
   
+  const deleteAssignment = (event) => {
+    const row_id = event.target.parentNode.parentNode.rowIndex - 1;
+    const id = assignments[row_id].id;
+    console.log("delete assignment "+id);
+    fetch(`${SERVER_URL}/assignment/${id}`, 
+      {  
+        method: 'DELETE', 
+      } 
+    )
+    .then((response) => { 
+      if (response.ok) {
+          setMessage('Assignment deleted.');
+          fetchAssignments();
+      } else {
+          setMessage("Assignment delete failed.");
+      }
+   } )
+  .catch((err) =>  { setMessage('Error. '+err) } );
+  }
   
-    const headers = ['Assignment Name', 'Course Title', 'Due Date', 'Grade', 'Edit'];
+    const headers = ['Assignment Name', 'Course Title', 'Due Date', ' ', ' ', ' '];
     
     return (
       <div>
         <h3>Assignments</h3>
         <div margin="auto" >
-        <Link to={`/addassignment/`} >
-          <button>Add New Assignment</button>
-        </Link>
           <h4>{message}&nbsp;</h4>
               <table className="Center"> 
                 <thead>
@@ -48,15 +68,18 @@ function ListAssignment(props) {
                       <td>{row.courseTitle}</td>
                       <td>{row.dueDate}</td>
                       <td>
-                      <Link to={`/gradeAssignment/${assignments[idx].id}`} >Grade</Link>
+                        <Link to={`/gradeAssignment/${assignments[idx].id}`} >Grade</Link>
                       </td>
-                      <td><Link to={`/editAssignment/${assignments[idx].id}`} >Edit/Delete</Link></td>
+                      <td><EditAssignment assignment={assignments[idx]} onClose={fetchAssignments} /></td>
+                      <td><button type="button" margin="auto" onClick={deleteAssignment}>Delete</button></td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+              <AddAssignment onClose={fetchAssignments}/>
           </div>
-        </div>
+      </div>
     )
-} 
+}  
+
 export default ListAssignment;

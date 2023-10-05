@@ -1,97 +1,70 @@
 import React, { useState } from 'react';
-import { SERVER_URL } from '../constants'; 
-import { Link } from 'react-router-dom';
+import {SERVER_URL} from '../constants'
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 
-function AddAssignment(props) {
-  const [assignment, setAssignment] = useState({
-    assignmentName: '',
-    dueDate: '',
-    courseTitle: '',
-    courseId: 0,
-  });
+function AddAssignment(props) { 
 
-  const saveAssignment = (e) => {
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [assignment, setAssignment] = useState({ assignmentName:'', dueDate:'', courseId: '' });
+  
+  const handleOpen = () => {
     setMessage('');
-    console.log("Assignment.save");
-    // Handle the submission, e.g., send the assignment data to an API or update a state variable.
-      try {
-        response = fetch(`${SERVER_URL}/assignment` ,
-        {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', },
+    setAssignment({ assignmentName:'', dueDate:'', courseId: '' });
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    props.onClose();
+  };
+
+  const handleChange = (event) => {
+    setAssignment({...assignment, [event.target.name]:event.target.value });
+  }
+
+  const addAssignment = ( ) => {
+    fetch(`${SERVER_URL}/assignment`, 
+      {  
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json', }, 
         body: JSON.stringify(assignment)
-        } )
-
-        // Handle the response as needed (e.g., show a success message, redirect, etc.)
-        console.log('Assignment added with ID:', response.data);
-        alert('Assignment added successfully.');
-
-        // Reset the form after a successful submission
-        setAssignment({
-        assignmentName: '',
-        dueDate: '',
-        courseTitle: '',
-        courseId: 0,
-      });
-      } catch (error) {
-      // Handle errors (e.g., show an error message to the user)
-      console.error('Error adding assignment:', error);
-      alert('Error adding assignment: ' + error.message);
+      } 
+    )
+    .then((response) => { 
+      if (response.ok) {
+          setMessage('Assignment added.');
+      } else {
+          setMessage("Add failed.");
       }
-  };
-
-  const onChangeInput = (e) => {
-    setMessage('');
-    const { name, value } = e.target;
-    setAssignment({
-      ...assignment,
-      [name]: value,
-    });
-  };
+   } )
+  .catch((err) =>  { setMessage('Error. '+err) } );
+  }
 
   return (
-    <div>
-      <h3>Add New Assignment</h3>
-      <button>
-        <Link to={`/`}>Home Page</Link>
-      </button>
-      <form onSubmit={saveAssignment}>
-        <div>
-          <label>Name:</label>
-          <input
-            type="text"
-            name="assignmentName"
-            value={assignment.assignmentName}
-            onChange={onChangeInput}
-          />
-        </div>
-        <div>
-          <label>Due Date:</label>
-          <input
-            type="date"
-            name="dueDate"
-            value={assignment.dueDate}
-            onChange={onChangeInput}
-          />
-        </div>
-        <div>
-          <label>Course:</label>
-          <textarea
-            type="text"
-            name="courseTitle"
-            value={assignment.courseTitle}
-            onChange={onChangeInput}
-          />
-        </div>
-        <button type="submit" id="add" style={{ margin: "auto" }}>
-          Add Assignment
-        </button>
-      </form>
-    </div>
-  );
+      <div>
+        <button type="button" margin="auto" onClick={handleOpen}>Add Assignment</button>
+        <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>New Assignment</DialogTitle>
+            <DialogContent  style={{paddingTop: 20}} >
+              <h4>{message}</h4>
+              <TextField autoFocus fullWidth label="Name" name="assignmentName" onChange={handleChange}  /> 
+              <TextField fullWidth label="Due Date" name="dueDate" helperText="yyyy-mm-dd" onChange={handleChange}  /> 
+              <TextField fullWidth label="Course ID" name="courseId" onChange={handleChange}  />
+            </DialogContent>
+            <DialogActions>
+              <Button color="secondary" onClick={handleClose}>Close</Button>
+              <Button id="add" color="primary" onClick={addAssignment}>Add</Button>
+            </DialogActions>
+          </Dialog>      
+      </div>
+  ); 
 }
 
-
 export default AddAssignment;
-
